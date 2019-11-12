@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import com.itesoft.contrib.popbridge.gmail.GmailDriver;
+import com.itesoft.contrib.popbridge.microsoft.ews.EwsDriver;
+import com.itesoft.contrib.popbridge.microsoft.msgraph.MsGraphDriver;
 
 public class Main
 {
@@ -14,6 +16,8 @@ public class Main
   static
   {
     DRIVER_CLASSES.put("GMAIL", GmailDriver.class);
+    DRIVER_CLASSES.put("MSGRAPH", MsGraphDriver.class);
+    DRIVER_CLASSES.put("EWS", EwsDriver.class);
   }
 
   public static void help()

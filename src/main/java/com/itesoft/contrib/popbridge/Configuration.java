@@ -18,12 +18,12 @@ public class Configuration
     _flags = new HashSet<>();
   }
 
-  void setFlag(String flag)
+  public void setFlag(String flag)
   {
     _flags.add(flag.toLowerCase());
   }
 
-  void setOption(String option, String value)
+  public void setOption(String option, String value)
   {
     _options.put(option.toLowerCase(), value);
   }
