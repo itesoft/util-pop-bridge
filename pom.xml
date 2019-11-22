@@ -105,14 +105,14 @@
   </dependencies>
 
   <scm>
-    <url>https://github.com/itesoft/util-pop-bridge</url>
-    <connection>scm:git:https://github.com/itesoft/util-pop-bridge.git</connection>
+    <url>https://git.w4store.com/itesoft/pop-bridge</url>
+    <connection>scm:git:https://git.w4store.com/itesoft/pop-bridge.git</connection>
   </scm>
 
   <licenses>
     <license>
       <name>MIT</name>
-      <url>https://github.com/itesoft/util-pop-bridge/LICENSE</url>
+      <url>https://git.w4store.com/itesoft/pop-bridge.git/LICENSE</url>
     </license>
   </licenses>
 </project>
