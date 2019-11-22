@@ -80,9 +80,6 @@ if "%1" == "" goto displayUsage
 if /i %1 == install goto install
 if /i %1 == remove goto  remove
 
-:displayUsage
-echo Usage: service.bat install/remove [client_id] [tenant] [program_port]
-goto end
 
 :remove
 ::---- Remove the service -------
@@ -154,12 +151,14 @@ goto end
 
 :stepClientIdRequired
 echo client_id: is Missing in argument line
-echo Usage: service.bat install/remove [client_id] [tenant] [program_port]
-goto end
+goto displayUsage
 
 :stepTenantRequired
 echo Tenant: is Missing in argument line
-echo Usage: service.bat install/remove [client_id] [tenant] [program_port]
+goto displayUsage
+
+:displayUsage
+echo Usage: service.cmd install/remove [client_id] [tenant] [program_port]
 goto end
 
 ::--------
