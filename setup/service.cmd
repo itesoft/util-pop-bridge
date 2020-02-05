@@ -105,7 +105,7 @@ echo Installing with Tenant  '%PR_TENANT%' ..
 ::--- Program Port
 if "%4" == "" goto nextStepInstall
 set PR_PORT=%~4
-echo Installing with program Port  '%PR_TENANT%' ..
+echo Installing with program Port  '%PR_PORT%' ..
 :nextStepInstall
 
 set CG_STOP_PARAMS=stop
