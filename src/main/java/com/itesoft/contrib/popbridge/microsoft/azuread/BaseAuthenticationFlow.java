@@ -4,12 +4,15 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import com.itesoft.contrib.popbridge.Configuration;
+import com.microsoft.aad.msal4j.IAccount;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.microsoft.aad.msal4j.PublicClientApplication;
 import com.microsoft.aad.msal4j.SilentParameters;
@@ -97,29 +100,29 @@ abstract class BaseAuthenticationFlow implements AuthenticationFlow, MsConstants
   @Override
   public String getAccessToken(String pop3user, String pop3password)
   {
-    IAuthenticationResult authenticationResult = getAccessTokenFromCache();
-    if (authenticationResult != null)
+    IAuthenticationResult authenticationResult = null;
+    CompletableFuture<IAuthenticationResult> futureAuthenticationResult = createAccessToken(pop3user, pop3password);
+    try
     {
-      return authenticationResult.accessToken();
+      authenticationResult = futureAuthenticationResult.join();
     }
-    else
+    catch (CompletionException e)
     {
-      CompletableFuture<IAuthenticationResult> futureAuthenticationResult = createAccessToken(pop3user, pop3password);
-      try
-      {
-        authenticationResult = futureAuthenticationResult.join();
-      }
-      catch (CompletionException e)
-      {
-        throw new RuntimeException(e);
-      }
-      return authenticationResult.accessToken();
+      throw new RuntimeException(e);
     }
+    return authenticationResult.accessToken();
   }
 
   private IAuthenticationResult getAccessTokenFromCache()
   {
-    SilentParameters silentParameters = SilentParameters.builder(getScopes(), getClientApplication().getAccounts().join().iterator().next()).build();
+
+    Set<IAccount> accounts = getClientApplication().getAccounts().join();
+    if(accounts.isEmpty()){
+      _logger.warning("[getAccessTokenFromCache] No retrieved account with ClientApplication  [" + getClientApplication().clientId() + ": " + getClientApplication().authority() + "]");
+      return null;
+   }
+   SilentParameters silentParameters = SilentParameters.builder(getScopes(), accounts.iterator().next()).build();
+
     CompletableFuture<IAuthenticationResult> future;
     try
     {

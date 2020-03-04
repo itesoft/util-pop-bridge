@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.logging.Logger;
 
 import com.itesoft.contrib.popbridge.gmail.GmailDriver;
 import com.itesoft.contrib.popbridge.microsoft.ews.EwsDriver;
@@ -13,6 +14,7 @@ import com.itesoft.contrib.popbridge.microsoft.msgraph.MsGraphDriver;
 public class Main
 {
   private static Map<String, Class<? extends Driver>> DRIVER_CLASSES = new HashMap<>();
+  private static Logger _logger = Logger.getLogger(Main.class.getName());
   static
   {
     DRIVER_CLASSES.put("GMAIL", GmailDriver.class);
@@ -51,6 +53,7 @@ public class Main
     Class<? extends Driver> driverClass = null;
     Configuration driverOptions = new Configuration();
     LinkedList<String> arguments = new LinkedList<>(Arrays.asList(args));
+    _logger.info("[main] ==> arguments [" + arguments + "]");
     while (!arguments.isEmpty())
     {
       String parameter = arguments.removeFirst();
@@ -67,7 +70,7 @@ public class Main
           }
           catch (NumberFormatException e)
           {
-            System.err.println("Invalid port " + portArg);
+            _logger.info("Invalid port " + portArg);
             System.exit(1);
           }
           break;
@@ -77,7 +80,7 @@ public class Main
           Class<? extends Driver> specifiedDriverClass = DRIVER_CLASSES.get(driverArg);
           if (specifiedDriverClass == null)
           {
-            System.err.println("Unknown driver " + driverArg);
+            _logger.info("Unknown driver " + driverArg);
             System.exit(1);
           }
           driverClass = specifiedDriverClass;
@@ -96,7 +99,7 @@ public class Main
           String[] optionArgParts = optionArg.split("=", 2);
           if (optionArgParts.length == 1)
           {
-            System.err.println("Option must be <key>=<value>");
+            _logger.info("Option must be <key>=<value>");
             System.exit(1);
           }
           String key = optionArgParts[0].toLowerCase();
@@ -108,20 +111,20 @@ public class Main
           help();
           break;
         default:
-          System.err.println("Unknown parameter '" + parameter + "'. Use '-h' for help.");
+          _logger.info("Unknown parameter '" + parameter + "'. Use '-h' for help.");
           System.exit(1);
         }
       }
       catch (NoSuchElementException e)
       {
-        System.err.println("Parameter '" + parameter + "' expect more arguments");
+        _logger.info("Parameter '" + parameter + "' expect more arguments");
         System.exit(1);
       }
     }
 
     if (driverClass == null)
     {
-      System.err.println("Parameter --driver is required");
+      _logger.info("Parameter --driver is required");
       System.exit(1);
     }
     Driver driver = driverClass.newInstance();
